@@ -1,5 +1,5 @@
 // services/usuarioService.ts
-const API_URL = "http://localhost:3000";
+const API_URL = "https://backend-vehiculos-production.up.railway.app";
 
 const fetchAPI = async (url: string, options: RequestInit = {}) => {
   const token = localStorage.getItem('token');

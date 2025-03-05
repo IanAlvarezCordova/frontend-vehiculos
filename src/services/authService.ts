@@ -1,5 +1,5 @@
 // services/authService.ts
-const API_URL = "http://localhost:3000";
+const API_URL = "https://backend-vehiculos-production.up.railway.app";
 
 export const authService = {
   async login(email: string, password: string) {
