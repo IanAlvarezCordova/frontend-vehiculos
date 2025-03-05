@@ -76,6 +76,78 @@ export const Vehiculos: React.FC = () => {
       return;
     }
     setSubmitted(true);
+    if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(editingVehiculo.marca || '')) {
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Ingrese una marca válida sin números.',
+        life: 3000,
+      });
+      return;
+    }
+    if (!/^[a-zA-ZÀ-ÿ0-9\s]+$/.test(editingVehiculo.modelo || '')) {
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Ingrese un modelo válido.',
+        life: 3000,
+      });
+      return;
+    }
+    if (!/^\d{4}$/.test(editingVehiculo.año?.toString() || '')) {
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Ingrese un año válido.',
+        life: 3000,
+      });
+      return;
+    }
+    if (!/^[A-Z]{3}-\d{3,4}$/.test(editingVehiculo.numeroPlaca || '')) {
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Ingrese un número de placa válido en formato AAA-123 o AAA-1234.',
+        life: 3000,
+      });
+      return;
+    }
+    if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(editingVehiculo.color || '')) {
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Ingrese un color válido sin números.',
+        life: 3000,
+      });
+      return;
+    }
+    if (!editingVehiculo.tipo) {
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Seleccione un tipo de vehículo.',
+        life: 3000,
+      });
+      return;
+    }
+    if (!/^\d+$/.test(editingVehiculo.odometro?.toString() || '')) {
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Ingrese un odómetro válido.',
+        life: 3000,
+      });
+      return;
+    }
+    if (!editingVehiculo.estado) {
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Seleccione un estado.',
+        life: 3000,
+      });
+      return;
+    }
     if (
       editingVehiculo.marca &&
       editingVehiculo.modelo &&
@@ -126,7 +198,7 @@ export const Vehiculos: React.FC = () => {
       loadVehiculos();
     } catch (error) {
       console.error('Error al eliminar el vehículo:', error);
-      toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Error al eliminar el vehículo', life: 3000 });
+      toast.current?.show({ severity: 'error', summary: 'Error', detail: error instanceof Error ? error.message : 'Error al eliminar el vehículo', life: 3000 });
     }
   };
 
@@ -187,7 +259,7 @@ export const Vehiculos: React.FC = () => {
             <label htmlFor="marca">Marca: </label>
             <InputText
               id="marca"
-              value={editingVehiculo.marca}
+              value={editingVehiculo.marca || ''}
               onChange={(e) => setEditingVehiculo({ ...editingVehiculo, marca: e.target.value })}
               required
               autoFocus
@@ -200,7 +272,7 @@ export const Vehiculos: React.FC = () => {
             <label htmlFor="modelo">Modelo: </label>
             <InputText
               id="modelo"
-              value={editingVehiculo.modelo}
+              value={editingVehiculo.modelo || ''}
               onChange={(e) => setEditingVehiculo({ ...editingVehiculo, modelo: e.target.value })}
               required
               className={submitted && !editingVehiculo.modelo ? 'p-invalid' : ''}
@@ -226,7 +298,7 @@ export const Vehiculos: React.FC = () => {
             <label htmlFor="numeroPlaca">Número de Placa: </label>
             <InputText
               id="numeroPlaca"
-              value={editingVehiculo.numeroPlaca}
+              value={editingVehiculo.numeroPlaca || ''}
               onChange={(e) => setEditingVehiculo({ ...editingVehiculo, numeroPlaca: e.target.value })}
               required
               className={submitted && !editingVehiculo.numeroPlaca ? 'p-invalid' : ''}
@@ -238,7 +310,7 @@ export const Vehiculos: React.FC = () => {
             <label htmlFor="color">Color: </label>
             <InputText
               id="color"
-              value={editingVehiculo.color}
+              value={editingVehiculo.color || ''}
               onChange={(e) => setEditingVehiculo({ ...editingVehiculo, color: e.target.value })}
               required
               className={submitted && !editingVehiculo.color ? 'p-invalid' : ''}
@@ -264,7 +336,7 @@ export const Vehiculos: React.FC = () => {
             <label htmlFor="odometro">Odómetro: </label>
             <InputText
               id="odometro"
-              value={editingVehiculo.odometro?.toString()}
+              value={editingVehiculo.odometro?.toString() || ''}
               onChange={(e) => setEditingVehiculo({ ...editingVehiculo, odometro: Number(e.target.value) })}
               required
               className={submitted && !editingVehiculo.odometro ? 'p-invalid' : ''}

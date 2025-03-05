@@ -54,7 +54,52 @@ export const Talleres: React.FC = () => {
       return;
     }
     setSubmitted(true);
-    if (editingTaller.nombre && editingTaller.direccion && editingTaller.telefono && editingTaller.correo) {
+    if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(editingTaller.nombre || '')) {
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Ingrese un nombre válido sin números.',
+        life: 3000,
+      });
+      return;
+    }
+    if (!/^[a-zA-ZÀ-ÿ0-9\s]+$/.test(editingTaller.direccion || '')) {
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Ingrese una dirección válida.',
+        life: 3000,
+      });
+      return;
+    }
+    if (!/^\d{3}-\d{4}$/.test(editingTaller.telefono || '')) {
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Ingrese un teléfono válido en formato 555-1234.',
+        life: 3000,
+      });
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(editingTaller.correo || '')) {
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Ingrese un correo electrónico válido.',
+        life: 3000,
+      });
+      return;
+    }
+    if (!/^([01]\d|2[0-3]):([0-5]\d)-([01]\d|2[0-3]):([0-5]\d)$/.test(editingTaller.horariosAtencion || '')) {
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Ingrese un horario de atención válido en formato HH:MM-HH:MM.',
+        life: 3000,
+      });
+      return;
+    }
+    if (editingTaller.nombre && editingTaller.direccion && editingTaller.telefono && editingTaller.correo && editingTaller.horariosAtencion) {
       try {
         if (editingTaller.id) {
           await tallerService.update(editingTaller.id, editingTaller);
@@ -93,7 +138,7 @@ export const Talleres: React.FC = () => {
       });
       loadTalleres();
     } catch (error) {
-      toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Error al eliminar el taller', life: 3000 });
+      toast.current?.show({ severity: 'error', summary: 'Error', detail: error instanceof Error ? error.message : 'Error al eliminar el vehículo', life: 3000 });
     }
   };
 
@@ -152,7 +197,7 @@ export const Talleres: React.FC = () => {
             <label htmlFor="nombre">Nombre: </label>
             <InputText
               id="nombre"
-              value={editingTaller.nombre}
+              value={editingTaller.nombre || ''}
               onChange={(e) => setEditingTaller({ ...editingTaller, nombre: e.target.value })}
               required
               autoFocus
@@ -165,7 +210,7 @@ export const Talleres: React.FC = () => {
             <label htmlFor="direccion">Dirección: </label>
             <InputText
               id="direccion"
-              value={editingTaller.direccion}
+              value={editingTaller.direccion || ''}
               onChange={(e) => setEditingTaller({ ...editingTaller, direccion: e.target.value })}
               required
               className={submitted && !editingTaller.direccion ? 'p-invalid' : ''}
@@ -177,7 +222,7 @@ export const Talleres: React.FC = () => {
             <label htmlFor="telefono">Teléfono: </label>
             <InputText
               id="telefono"
-              value={editingTaller.telefono}
+              value={editingTaller.telefono || ''}
               onChange={(e) => setEditingTaller({ ...editingTaller, telefono: e.target.value })}
               required
               className={submitted && !editingTaller.telefono ? 'p-invalid' : ''}
@@ -189,7 +234,7 @@ export const Talleres: React.FC = () => {
             <label htmlFor="correo">Correo: </label>
             <InputText
               id="correo"
-              value={editingTaller.correo}
+              value={editingTaller.correo || ''}
               onChange={(e) => setEditingTaller({ ...editingTaller, correo: e.target.value })}
               required
               className={submitted && !editingTaller.correo ? 'p-invalid' : ''}
@@ -201,16 +246,19 @@ export const Talleres: React.FC = () => {
             <label htmlFor="horariosAtencion">Horarios de Atención: </label>
             <InputText
               id="horariosAtencion"
-              value={editingTaller.horariosAtencion}
+              value={editingTaller.horariosAtencion || ''}
               onChange={(e) => setEditingTaller({ ...editingTaller, horariosAtencion: e.target.value })}
+              required
+              className={submitted && !editingTaller.horariosAtencion ? 'p-invalid' : ''}
             />
+            {submitted && !editingTaller.horariosAtencion && <small className="p-error">Horarios de Atención es requerido.</small>}
           </div>
           <br />
           <div className="p-field">
             <label htmlFor="especialidades">Especialidades: </label>
             <InputText
               id="especialidades"
-              value={editingTaller.especialidades}
+              value={editingTaller.especialidades || ''}
               onChange={(e) => setEditingTaller({ ...editingTaller, especialidades: e.target.value })}
             />
           </div>

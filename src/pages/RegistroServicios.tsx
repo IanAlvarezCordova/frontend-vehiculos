@@ -187,10 +187,18 @@ export const RegistroServicios: React.FC = () => {
       toast.current?.show({
         severity: 'error',
         summary: 'Error',
-        detail: 'Error al eliminar el registro de servicio',
+         detail: error instanceof Error ? error.message : 'Error al eliminar el vehículo',
         life: 3000,
       });
     }
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
   };
 
   return (
@@ -212,7 +220,7 @@ export const RegistroServicios: React.FC = () => {
 
       <DataTable value={registroServicios}>
         <Column field="id" header="Id" sortable />
-        <Column field="fechaServicio" header="Fecha de Servicio" sortable />
+        <Column field="fechaServicio" header="Fecha de Servicio" sortable body={(rowData) => formatDate(rowData.fechaServicio)} />
         <Column field="descripcion" header="Descripción" sortable />
         <Column field="costo" header="Costo" sortable />
         <Column field="tipoServicio" header="Tipo de Servicio" sortable />
@@ -265,6 +273,7 @@ export const RegistroServicios: React.FC = () => {
               onChange={(e) => setEditingRegistroServicio({ ...editingRegistroServicio, fechaServicio: e.value || undefined })}
               required
               className={submitted && !editingRegistroServicio.fechaServicio ? 'p-invalid' : ''}
+              dateFormat="dd/mm/yy"
             />
             {submitted && !editingRegistroServicio.fechaServicio && (
               <small className="p-error">Fecha de Servicio es requerida.</small>
@@ -357,15 +366,15 @@ export const RegistroServicios: React.FC = () => {
           <div className="p-field">
             <label htmlFor="documentos">Documentos: </label>
             <FileUpload
-              name="documentos"
-              url="./upload"
+              name="file"
+              url="http://localhost:3000/upload"
               multiple
               accept="image/*,application/pdf"
               maxFileSize={10000000}
               onUpload={(e) =>
                 setEditingRegistroServicio({
                   ...editingRegistroServicio,
-                  documentos: e.files.map((file: any) => file.name).join(','),
+                  documentos: e.files.map((file: any) => file.response.path).join(','),
                 })
               }
             />
@@ -388,7 +397,7 @@ export const RegistroServicios: React.FC = () => {
             </div>
             <div className="p-field">
               <label htmlFor="fechaServicio">Fecha de Servicio: </label>
-              <Calendar id="fechaServicio" value={new Date(selectedRegistroServicio.fechaServicio)} disabled />
+              <InputText id="fechaServicio" value={formatDate(selectedRegistroServicio.fechaServicio)} disabled />
             </div>
             <div className="p-field">
               <label htmlFor="descripcion">Descripción: </label>

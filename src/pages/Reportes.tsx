@@ -32,7 +32,7 @@ export const Reportes: React.FC = () => {
                     setShowModal(true);
                 }
             } catch (error) {
-                toast.current?.show({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los datos', life: 3000 });
+                toast.current?.show({ severity: 'error', summary: 'Error', detail: error instanceof Error ? error.message : 'Error al eliminar el vehículo', life: 3000 });
             }
         };
         loadData();

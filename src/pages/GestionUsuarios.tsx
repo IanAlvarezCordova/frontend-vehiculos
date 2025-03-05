@@ -70,6 +70,24 @@ export const GestionUsuarios: React.FC = () => {
 
   const saveUsuario = async () => {
     setSubmitted(true);
+    if (!/^[a-zA-ZÀ-ÿ]+(\s[a-zA-ZÀ-ÿ]+)+$/.test(editingUsuario.nombres || '')) {
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Ingrese al menos dos nombres válidos sin números.',
+        life: 3000,
+      });
+      return;
+    }
+    if (!/^[a-zA-ZÀ-ÿ]+(\s[a-zA-ZÀ-ÿ]+)+$/.test(editingUsuario.apellidos || '')) {
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Ingrese al menos dos apellidos válidos sin números.',
+        life: 3000,
+      });
+      return;
+    }
     if (editingUsuario.nombres && editingUsuario.apellidos && editingUsuario.email) {
       try {
         await usuarioService.update(editingUsuario.id!, editingUsuario);

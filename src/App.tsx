@@ -1,4 +1,3 @@
-// App.tsx
 import './App.css';
 import { Route, BrowserRouter as Router, Routes, Navigate } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
@@ -32,7 +31,7 @@ const App: React.FC = () => {
       <Router>
         <Navbar />
         <div className="p-m-4">
-        <Routes>
+          <Routes>
             <Route path="/" element={<Inicio />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />

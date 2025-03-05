@@ -1,4 +1,4 @@
-const API_URL = "https://backend-vehiculos-production.up.railway.app";
+const API_URL = "http://localhost:3000";
 
 export const fetchAPI = async (endpoint: string, options: RequestInit = {}) => {
   const response = await fetch(`${API_URL}${endpoint}`, {

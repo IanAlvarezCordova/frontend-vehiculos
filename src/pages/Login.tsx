@@ -1,6 +1,4 @@
-// pages/Login.tsx
-import React, { useState } from 'react';
-import { Card } from 'primereact/card';
+import React, { useState, useRef } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
@@ -13,7 +11,7 @@ export const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const toast = React.useRef<Toast>(null);
+  const toast = useRef<Toast>(null);
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -22,7 +20,12 @@ export const Login: React.FC = () => {
     try {
       await authService.login(email, password);
       login();
-      toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Inicio de sesión exitoso', life: 3000 });
+      toast.current?.show({
+        severity: 'success',
+        summary: 'Éxito',
+        detail: 'Inicio de sesión exitoso',
+        life: 3000,
+      });
       navigate('/dashboard');
     } catch (error) {
       toast.current?.show({
@@ -36,58 +39,51 @@ export const Login: React.FC = () => {
     }
   };
 
-  const footer = (
-    <div className="p-text-center">
-      <span>¿No tienes una cuenta? </span>
-      <Button label="Regístrate" link onClick={() => navigate('/register')} />
-    </div>
-  );
-
   return (
-    <div
-      className="p-d-flex p-jc-center p-ai-center"
-      style={{ minHeight: '100vh', backgroundColor: '#f4f4f4', padding: '2rem' }}
-    >
+    <div className="flex justify-center items-center min-h-screen bg-gray-300 p-6">
       <Toast ref={toast} />
-      <Card
-        title="Iniciar Sesión"
-        footer={footer}
-        className="p-shadow-5"
-        style={{ width: '100%', maxWidth: '600px', padding: '2rem', boxSizing: 'border-box' }}
-      >
+      <div className="w-full max-w-md bg-gray-300 p-6 rounded-xl shadow-lg">
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">Iniciar Sesión</h2>
+
         <div className="p-fluid">
-          <div className="p-field">
-            <label htmlFor="email">Correo Electrónico</label>
+          <div className="mb-4">
+            <label htmlFor="email" className="block text-gray-700 font-semibold mb-1">Correo Electrónico</label>
             <InputText
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
               placeholder="Ingrese su correo"
-              style={{ fontSize: '1.2rem', padding: '0.75rem' }}
+              className="p-inputtext-lg w-full"
             />
           </div>
-          <div className="p-field">
-            <label htmlFor="password">Contraseña</label>
+
+          <div className="mb-4">
+            <label htmlFor="password" className="block text-gray-700 font-semibold mb-1">Contraseña</label>
             <Password
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
               placeholder="Ingrese su contraseña"
               toggleMask
-              style={{ fontSize: '1.2rem', padding: '0.75rem' }}
+              feedback={false}
+              className="p-inputtext-lg w-full"
             />
           </div>
+
           <Button
             label="Iniciar Sesión"
             icon="pi pi-sign-in"
             loading={loading}
             onClick={handleLogin}
-            style={{ fontSize: '1.2rem', padding: '0.75rem' }}
+            className="p-button-primary w-full text-lg py-3"
           />
         </div>
-      </Card>
+
+        <div className="text-center mt-4">
+          <span className="text-gray-600">¿No tienes una cuenta? </span>
+          <Button label="Regístrate" className="p-button-text text-blue-500" onClick={() => navigate('/register')} />
+        </div>
+      </div>
     </div>
   );
 };
