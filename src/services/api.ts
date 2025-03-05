@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_URL = "https://backend-vehiculos-production.up.railway.app";
 
 export const fetchAPI = async (endpoint: string, options: RequestInit = {}) => {
   const response = await fetch(`${API_URL}${endpoint}`, {
