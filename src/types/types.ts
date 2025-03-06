@@ -1,6 +1,6 @@
 export interface RegistroServicio {
     id: number;
-    fechaServicio: Date;
+    fechaServicio: string;
     descripcion?: string;
     costo: number;
     tipoServicio: 'mantenimiento preventivo' | 'reparacion correctiva' | 'revision tecnica';

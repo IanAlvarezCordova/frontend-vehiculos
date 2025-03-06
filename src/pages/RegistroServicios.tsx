@@ -23,9 +23,7 @@ export const RegistroServicios: React.FC = () => {
   const toast = useRef<Toast>(null);
   const [displayDialog, setDisplayDialog] = useState(false);
   const [displayDetailsDialog, setDisplayDetailsDialog] = useState(false);
-  const [editingRegistroServicio, setEditingRegistroServicio] = useState<Partial<RegistroServicio & { fechaServicio: Date | undefined }>>({
-    fechaServicio: undefined,
-  });
+  const [editingRegistroServicio, setEditingRegistroServicio] = useState<Partial<RegistroServicio>>({});
   const [selectedRegistroServicio, setSelectedRegistroServicio] = useState<RegistroServicio | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
@@ -268,13 +266,16 @@ export const RegistroServicios: React.FC = () => {
           <div className="p-field">
             <label htmlFor="fechaServicio">Fecha de Servicio: </label>
             <Calendar
-              id="fechaServicio"
-              value={editingRegistroServicio.fechaServicio || undefined}
-              onChange={(e) => setEditingRegistroServicio({ ...editingRegistroServicio, fechaServicio: e.value || undefined })}
-              required
-              className={submitted && !editingRegistroServicio.fechaServicio ? 'p-invalid' : ''}
-              dateFormat="dd/mm/yy"
-            />
+            id="fechaServicio"
+            value={editingRegistroServicio.fechaServicio ? new Date(editingRegistroServicio.fechaServicio) : undefined}
+            onChange={(e) => setEditingRegistroServicio({
+              ...editingRegistroServicio,
+              fechaServicio: e.value instanceof Date ? e.value.toISOString() : undefined
+            })}
+            required
+            className={submitted && !editingRegistroServicio.fechaServicio ? 'p-invalid' : ''}
+            dateFormat="dd/mm/yy"
+          />
             {submitted && !editingRegistroServicio.fechaServicio && (
               <small className="p-error">Fecha de Servicio es requerida.</small>
             )}
@@ -396,9 +397,13 @@ export const RegistroServicios: React.FC = () => {
               <InputText id="id" value={selectedRegistroServicio.id.toString()} disabled />
             </div>
             <div className="p-field">
-              <label htmlFor="fechaServicio">Fecha de Servicio: </label>
-              <InputText id="fechaServicio" value={formatDate(selectedRegistroServicio.fechaServicio)} disabled />
-            </div>
+            <label htmlFor="fechaServicio">Fecha de Servicio: </label>
+            <InputText
+              id="fechaServicio"
+              value={selectedRegistroServicio ? formatDate(selectedRegistroServicio.fechaServicio) : ''}
+              disabled
+            />
+          </div>
             <div className="p-field">
               <label htmlFor="descripcion">Descripción: </label>
               <InputText id="descripcion" value={selectedRegistroServicio.descripcion} disabled />
