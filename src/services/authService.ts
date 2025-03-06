@@ -43,6 +43,33 @@ export const authService = {
     }
   },
 
+  async updateProfile(id: number, data: Partial<any> & { password?: string }) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No hay sesión activa');
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/usuario/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Error al actualizar el perfil');
+      }
+
+      return await response.json();
+    } catch (error) {
+      throw error instanceof Error ? error : new Error('Error desconocido');
+    }
+  },
+
   async getProfile() {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -58,7 +85,7 @@ export const authService = {
         if (response.status === 401) {
           localStorage.removeItem('token');
           localStorage.removeItem('email');
-          window.location.href = '/login';
+          window.location.href = '/auth/login';
           throw new Error('Sesión expirada');
         }
         throw new Error('Error al obtener el perfil');
@@ -73,7 +100,7 @@ export const authService = {
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('email');
-    window.location.href = '/login';
+    window.location.href = '/auth/login';
   },
 
   isAuthenticated() {

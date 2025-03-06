@@ -6,7 +6,7 @@ export const Inicio: React.FC = () => {
         <div>
             <h1>Bienvenido a la aplicación de roles y usuarios</h1>
             <p>Utiliza el menú superior para navegar entre las distintas secciones</p>
-            <Link to="/login">Ir al login</Link>
+            <Link to="/auth/login">Ir al login</Link>
         </div>
     );
 };

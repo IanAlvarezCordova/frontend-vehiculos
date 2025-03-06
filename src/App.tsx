@@ -20,7 +20,7 @@ const PrivateRoute: React.FC<{ element: JSX.Element; adminOnly?: boolean }> = ({
   const isAuthenticated = authService.isAuthenticated();
   const isAdmin = roles.includes('administrador');
 
-  if (!isAuthenticated) return <Navigate to="/login" />;
+  if (!isAuthenticated) return <Navigate to="/auth/login" />;
   if (adminOnly && !isAdmin) return <Navigate to="/dashboard" />;
   return element;
 };
@@ -33,8 +33,8 @@ const App: React.FC = () => {
         <div className="p-m-4">
           <Routes>
             <Route path="/" element={<Inicio />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/auth/login" element={<Login />} />
+            <Route path="/auth/register" element={<Register />} />
             <Route path="/perfil" element={<PrivateRoute element={<UserProfile />} />} />
             <Route path="/vehiculos" element={<PrivateRoute element={<Vehiculos />} />} />
             <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} />} />

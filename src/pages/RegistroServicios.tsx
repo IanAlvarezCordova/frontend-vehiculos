@@ -365,22 +365,27 @@ export const RegistroServicios: React.FC = () => {
           </div>
           <br />
           <div className="p-field">
-            <label htmlFor="documentos">Documentos: </label>
-            <FileUpload
-              name="file"
-              url="http://localhost:3000/upload"
-              multiple
-              accept="image/*,application/pdf"
-              maxFileSize={10000000}
-              onUpload={(e) =>
+          <label htmlFor="documentos">Documentos: </label>
+          <FileUpload
+            name="file"
+            multiple={false}
+            accept="image/*,application/pdf"
+            maxFileSize={10000000}
+            onSelect={(e) => {
+              if (e.files && e.files.length > 0) {
+                const fileName = e.files[0].name;
                 setEditingRegistroServicio({
                   ...editingRegistroServicio,
-                  documentos: e.files.map((file: any) => file.response.path).join(','),
-                })
+                  documentos: fileName,
+                });
               }
-            />
-          </div>
-          <br />
+            }}
+            chooseLabel="Seleccionar archivo"
+            uploadLabel="Cargar"
+            cancelLabel="Cancelar"
+          />
+        </div>
+        <br />
         </Dialog>
       )}
 
@@ -435,19 +440,7 @@ export const RegistroServicios: React.FC = () => {
             <div className="p-field">
               <label htmlFor="documentos">Documentos: </label>
               {selectedRegistroServicio.documentos ? (
-                <>
-                  {selectedRegistroServicio.documentos.match(/\.(jpeg|jpg|gif|png)$/) ? (
-                    <img
-                      src={selectedRegistroServicio.documentos}
-                      alt="Documento"
-                      style={{ maxWidth: '100%', maxHeight: '200px', borderRadius: '5px' }}
-                    />
-                  ) : (
-                    <a href={selectedRegistroServicio.documentos} target="_blank" rel="noopener noreferrer">
-                      Descargar documento
-                    </a>
-                  )}
-                </>
+                <span>{selectedRegistroServicio.documentos}</span>
               ) : (
                 <span>No hay documentos</span>
               )}

@@ -23,8 +23,10 @@ export const GestionUsuarios: React.FC = () => {
   const [rolesDisponibles, setRolesDisponibles] = useState<Rol[]>([]);
   const [displayEditDialog, setDisplayEditDialog] = useState(false);
   const [displayRolesDialog, setDisplayRolesDialog] = useState(false);
+  const [displayDeleteDialog, setDisplayDeleteDialog] = useState(false); // Nuevo estado para el diálogo de eliminación
   const [editingUsuario, setEditingUsuario] = useState<Partial<Usuario>>({});
   const [selectedRoles, setSelectedRoles] = useState<Rol[]>([]);
+  const [usuarioToDelete, setUsuarioToDelete] = useState<Usuario | null>(null); // Estado para el usuario a eliminar
   const [submitted, setSubmitted] = useState(false);
   const toast = useRef<Toast>(null);
 
@@ -63,9 +65,15 @@ export const GestionUsuarios: React.FC = () => {
     setDisplayRolesDialog(true);
   };
 
+  const openDeleteDialog = (usuario: Usuario) => {
+    setUsuarioToDelete(usuario);
+    setDisplayDeleteDialog(true);
+  };
+
   const hideDialog = () => {
     setDisplayEditDialog(false);
     setDisplayRolesDialog(false);
+    setDisplayDeleteDialog(false);
   };
 
   const saveUsuario = async () => {
@@ -131,6 +139,25 @@ export const GestionUsuarios: React.FC = () => {
     }
   };
 
+  const deleteUsuario = async () => {
+    if (!usuarioToDelete) return;
+
+    try {
+      await usuarioService.delete(usuarioToDelete.id); // Método delete del backend
+      toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Usuario eliminado', life: 3000 });
+      setDisplayDeleteDialog(false);
+      setUsuarioToDelete(null);
+      loadUsuarios();
+    } catch (error) {
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: error instanceof Error ? error.message : 'Error al eliminar el usuario',
+        life: 3000,
+      });
+    }
+  };
+
   const editFooter = (
     <div>
       <Button label="Cancelar" icon="pi pi-times" className="p-button-outlined p-button-danger" onClick={hideDialog} />
@@ -142,6 +169,23 @@ export const GestionUsuarios: React.FC = () => {
     <div>
       <Button label="Cancelar" icon="pi pi-times" className="p-button-outlined p-button-danger" onClick={hideDialog} />
       <Button label="Guardar" icon="pi pi-save" className="p-button-outlined p-button-success" onClick={saveRoles} />
+    </div>
+  );
+
+  const deleteFooter = (
+    <div>
+      <Button
+        label="No"
+        icon="pi pi-times"
+        className="p-button-outlined p-button-secondary"
+        onClick={hideDialog}
+      />
+      <Button
+        label="Sí"
+        icon="pi pi-check"
+        className="p-button-outlined p-button-danger"
+        onClick={deleteUsuario}
+      />
     </div>
   );
 
@@ -175,6 +219,11 @@ export const GestionUsuarios: React.FC = () => {
                 icon="pi pi-users"
                 className="p-button-rounded p-button-outlined p-button-info p-mr-2"
                 onClick={() => openRolesDialog(rowData)}
+              />
+              <Button
+                icon="pi pi-trash"
+                className="p-button-rounded p-button-outlined p-button-danger"
+                onClick={() => openDeleteDialog(rowData)}
               />
             </>
           )}
@@ -233,6 +282,20 @@ export const GestionUsuarios: React.FC = () => {
               display="chip"
             />
           </div>
+        </div>
+      </Dialog>
+
+      <Dialog
+        visible={displayDeleteDialog}
+        header="Confirmar Eliminación"
+        onHide={hideDialog}
+        footer={deleteFooter}
+      >
+        <div className="p-d-flex p-ai-center">
+          <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem', color: 'red' }} />
+          <span>
+            ¿Estás seguro de que deseas eliminar al usuario <strong>{usuarioToDelete?.nombres} {usuarioToDelete?.apellidos}</strong>? Esta acción no se puede deshacer.
+          </span>
         </div>
       </Dialog>
     </div>

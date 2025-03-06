@@ -53,7 +53,7 @@ export const Register: React.FC = () => {
         detail: 'Registro exitoso, por favor inicia sesión.',
         life: 3000,
       });
-      navigate('/login');
+      navigate('/auth/login');
     } catch (error) {
       toast.current?.show({
         severity: 'error',
@@ -129,7 +129,7 @@ export const Register: React.FC = () => {
 
         <div className="text-center mt-4">
           <span className="text-gray-600">¿Ya tienes una cuenta? </span>
-          <Button label="Inicia Sesión" className="p-button-text text-blue-500" onClick={() => navigate('/login')} />
+          <Button label="Inicia Sesión" className="p-button-text text-blue-500" onClick={() => navigate('/auth/login')} />
         </div>
       </div>
     </div>

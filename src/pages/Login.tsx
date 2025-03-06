@@ -81,7 +81,7 @@ export const Login: React.FC = () => {
 
         <div className="text-center mt-4">
           <span className="text-gray-600">¿No tienes una cuenta? </span>
-          <Button label="Regístrate" className="p-button-text text-blue-500" onClick={() => navigate('/register')} />
+          <Button label="Regístrate" className="p-button-text text-blue-500" onClick={() => navigate('/auth/register')} />
         </div>
       </div>
     </div>
